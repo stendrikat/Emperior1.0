@@ -501,7 +501,7 @@ public class MainFrame extends JFrame {
 
 	protected void runProject() {
 			
-			doParsing();
+			if(doParsing()){
 		
 			new Thread(){
 				public void run(){
@@ -532,7 +532,7 @@ public class MainFrame extends JFrame {
 				}
 			}.start();
 			
-						
+			}
 //			jUnitOutput = "JUnit Output:\n";
 			
 			
@@ -586,7 +586,7 @@ public class MainFrame extends JFrame {
 
 	protected void testProject() {
 		
-		doParsing();
+		if(doParsing()){
 		
 		try {
 			Main.backupCompleteProject();
@@ -629,6 +629,7 @@ public class MainFrame extends JFrame {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
 		}
 	}
 
@@ -703,15 +704,19 @@ public class MainFrame extends JFrame {
 		return jConsoleScrollPane;
 	}
 	
-	private void doParsing(){
+	private boolean doParsing(){
 		Parser p = new Parser();
 		
-		for(JEditorPane pane : editors.values()){
-			if(pane.getName().contains("v2"))
+		for(String key : editors.keySet()){
+			if(key.contains("Parser")){
+				JEditorPane pane = editors.get(key);
 				if(!p.parse(pane.getText())){
-					JOptionPane.showMessageDialog(null, "You can not cast in this task");
+					consolePane.setText("You can not cast in this task.");
+					return false;
 				}
+			}
 		}
+		return true;
 	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"
