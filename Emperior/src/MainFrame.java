@@ -47,6 +47,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -499,6 +500,9 @@ public class MainFrame extends JFrame {
 	
 
 	protected void runProject() {
+			
+			doParsing();
+		
 			new Thread(){
 				public void run(){
 					try {
@@ -581,6 +585,9 @@ public class MainFrame extends JFrame {
 	
 
 	protected void testProject() {
+		
+		doParsing();
+		
 		try {
 			Main.backupCompleteProject();
 			Main.addLineToLogFile("[TestCase] run");
@@ -695,5 +702,20 @@ public class MainFrame extends JFrame {
 		jConsoleScrollPane.add(getJConsoleTextPane());
 		return jConsoleScrollPane;
 	}
+	
+	private void doParsing(){
+		Parser p = new Parser();
+		
+		for(JEditorPane pane : editors.values()){
+			if(pane.getName().contains("v2"))
+				if(!p.parse(pane.getText())){
+					JOptionPane.showMessageDialog(null, "You can not cast in this task");
+				}
+		}
+	}
 
 } // @jve:decl-index=0:visual-constraint="10,10"
+
+
+
+
